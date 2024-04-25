@@ -3,7 +3,7 @@ package com.dantsu.escposprinter.connection.bluetooth;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
-
+import android.text.TextUtils;
 import androidx.annotation.Nullable;
 
 import com.dantsu.escposprinter.exceptions.EscPosConnectionException;
