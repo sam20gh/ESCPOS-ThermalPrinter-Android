@@ -52,7 +52,7 @@ public class BluetoothPrintersConnections extends BluetoothConnections {
             BluetoothDevice device = bluetoothConnection.getDevice();
 
 
-            if(TextUtils.equals(device.getName().toUpperCase(),'INNERPRINTER')){
+            if(TextUtils.equals(device.getName().toUpperCase() , 'INNERPRINTER')){
                 printersTmp[i++] = new BluetoothConnection(device);
             }
             else{
