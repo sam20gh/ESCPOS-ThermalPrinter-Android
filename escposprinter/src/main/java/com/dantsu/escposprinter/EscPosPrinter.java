@@ -26,10 +26,8 @@ public class EscPosPrinter extends EscPosPrinterSize {
      * @param printerNbrCharactersPerLine The maximum number of characters that can be printed on a line.
      */
     public EscPosPrinter(DeviceConnection printerConnection, int printerDpi, float printerWidthMM, int printerNbrCharactersPerLine) throws EscPosConnectionException {
-
-        Log.d("LOGGRUBPRINTER",  "NEW PRINTER WITH CONNECTION 1");
-
         this(printerConnection != null ? new EscPosPrinterCommands(printerConnection) : null, printerDpi, printerWidthMM, printerNbrCharactersPerLine);
+        Log.d("LOGGRUBPRINTER",  "NEW PRINTER WITH CONNECTION 1");
     }
 
     /**
@@ -42,10 +40,9 @@ public class EscPosPrinter extends EscPosPrinterSize {
      * @param charsetEncoding             Set the charset encoding.
      */
     public EscPosPrinter(DeviceConnection printerConnection, int printerDpi, float printerWidthMM, int printerNbrCharactersPerLine, EscPosCharsetEncoding charsetEncoding) throws EscPosConnectionException {
-
+        this(printerConnection != null ? new EscPosPrinterCommands(printerConnection, charsetEncoding) : null, printerDpi, printerWidthMM, printerNbrCharactersPerLine);
         Log.d("LOGGRUBPRINTER",  "NEW PRINTER WITH CONNECTION 2");
 
-        this(printerConnection != null ? new EscPosPrinterCommands(printerConnection, charsetEncoding) : null, printerDpi, printerWidthMM, printerNbrCharactersPerLine);
     }
 
     /**
