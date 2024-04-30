@@ -12,6 +12,7 @@ import com.dantsu.escposprinter.exceptions.EscPosConnectionException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.UUID;
+import android.util.Log;
 
 public class BluetoothConnection extends DeviceConnection {
 
@@ -54,9 +55,12 @@ public class BluetoothConnection extends DeviceConnection {
      */
     @SuppressLint("MissingPermission")
     public BluetoothConnection connect() throws EscPosConnectionException {
+        Log.d("LOGGRUBPRINTER",  "START CONNECT TO BLUE CONNECTION");
         if (this.isConnected()) {
+            Log.d("LOGGRUBPRINTER",  "IS CONNECTED");
             return this;
         }
+        Log.d("LOGGRUBPRINTER",  "IS CONNECTED");
 
         if (this.device == null) {
             throw new EscPosConnectionException("Bluetooth device is not connected.");
@@ -66,6 +70,8 @@ public class BluetoothConnection extends DeviceConnection {
 
         UUID uuid = this.getDeviceUUID();
 
+        Log.d("LOGGRUBPRINTER", "UUID IS:" );
+        Log.d("LOGGRUBPRINTER", uuid.toString());
         try {
             this.socket = this.device.createRfcommSocketToServiceRecord(uuid);
             bluetoothAdapter.cancelDiscovery();

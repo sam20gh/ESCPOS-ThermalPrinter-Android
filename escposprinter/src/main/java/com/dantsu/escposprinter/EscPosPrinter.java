@@ -1,5 +1,7 @@
 package com.dantsu.escposprinter;
 
+import android.util.Log;
+
 import com.dantsu.escposprinter.connection.DeviceConnection;
 import com.dantsu.escposprinter.exceptions.EscPosBarcodeException;
 import com.dantsu.escposprinter.exceptions.EscPosConnectionException;
@@ -24,6 +26,9 @@ public class EscPosPrinter extends EscPosPrinterSize {
      * @param printerNbrCharactersPerLine The maximum number of characters that can be printed on a line.
      */
     public EscPosPrinter(DeviceConnection printerConnection, int printerDpi, float printerWidthMM, int printerNbrCharactersPerLine) throws EscPosConnectionException {
+
+        Log.d("LOGGRUBPRINTER",  "NEW PRINTER WITH CONNECTION 1");
+
         this(printerConnection != null ? new EscPosPrinterCommands(printerConnection) : null, printerDpi, printerWidthMM, printerNbrCharactersPerLine);
     }
 
@@ -37,6 +42,9 @@ public class EscPosPrinter extends EscPosPrinterSize {
      * @param charsetEncoding             Set the charset encoding.
      */
     public EscPosPrinter(DeviceConnection printerConnection, int printerDpi, float printerWidthMM, int printerNbrCharactersPerLine, EscPosCharsetEncoding charsetEncoding) throws EscPosConnectionException {
+
+        Log.d("LOGGRUBPRINTER",  "NEW PRINTER WITH CONNECTION 2");
+
         this(printerConnection != null ? new EscPosPrinterCommands(printerConnection, charsetEncoding) : null, printerDpi, printerWidthMM, printerNbrCharactersPerLine);
     }
 
@@ -50,6 +58,10 @@ public class EscPosPrinter extends EscPosPrinterSize {
      */
     public EscPosPrinter(EscPosPrinterCommands printer, int printerDpi, float printerWidthMM, int printerNbrCharactersPerLine) throws EscPosConnectionException {
         super(printerDpi, printerWidthMM, printerNbrCharactersPerLine);
+
+        Log.d("LOGGRUBPRINTER",  "NEW PRINTER WITH CONNECTION 3");
+        Log.d("LOGGRUBPRINTER",  printer !=null ? 'PRINTER CHOOSED':'PRINTER NULLED');
+
         if (printer != null) {
             this.printer = printer.connect();
         }
@@ -108,16 +120,21 @@ public class EscPosPrinter extends EscPosPrinterSize {
      * @return Fluent interface
      */
     public EscPosPrinter printFormattedText(String text, int dotsFeedPaper) throws EscPosConnectionException, EscPosParserException, EscPosEncodingException, EscPosBarcodeException {
+
+        Log.d("LOGGRUBPRINTER", "START PRINT TEXT");
         if (this.printer == null || this.printerNbrCharactersPerLine == 0) {
             return this;
         }
+        Log.d("LOGGRUBPRINTER", "PRINTER IS NOT NULL");
 
         PrinterTextParser textParser = new PrinterTextParser(this);
         PrinterTextParserLine[] linesParsed = textParser
                 .setFormattedText(text)
                 .parse();
 
+        Log.d("LOGGRUBPRINTER", "PRINTER RESETING");
         this.printer.reset();
+        Log.d("LOGGRUBPRINTER", "PRINTER RESETED");
 
         for (PrinterTextParserLine line : linesParsed) {
             PrinterTextParserColumn[] columns = line.getColumns();
