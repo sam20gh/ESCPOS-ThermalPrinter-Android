@@ -60,7 +60,7 @@ public class EscPosPrinter extends EscPosPrinterSize {
         super(printerDpi, printerWidthMM, printerNbrCharactersPerLine);
 
         Log.d("LOGGRUBPRINTER",  "NEW PRINTER WITH CONNECTION 3");
-        Log.d("LOGGRUBPRINTER",  printer !=null ? 'PRINTER CHOOSED':'PRINTER NULLED');
+        Log.d("LOGGRUBPRINTER",  printer !=null ? "PRINTER CHOOSED":"PRINTER NULLED");
 
         if (printer != null) {
             this.printer = printer.connect();
