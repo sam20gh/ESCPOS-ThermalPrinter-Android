@@ -74,11 +74,16 @@ public class BluetoothConnection extends DeviceConnection {
         Log.d("LOGGRUBPRINTER", uuid.toString());
         try {
             this.socket = this.device.createRfcommSocketToServiceRecord(uuid);
+            Log.d("LOGGRUBPRINTER","AFTER CREATE SOCKET");
             bluetoothAdapter.cancelDiscovery();
+            Log.d("LOGGRUBPRINTER","AFTER cancelDiscovery");
             this.socket.connect();
+            Log.d("LOGGRUBPRINTER","AFTER connect");
             this.outputStream = this.socket.getOutputStream();
+            Log.d("LOGGRUBPRINTER","AFTER outputStream");
             this.data = new byte[0];
         } catch (IOException e) {
+            Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device.");
             e.printStackTrace();
             this.disconnect();
             throw new EscPosConnectionException("Unable to connect to bluetooth device.");
