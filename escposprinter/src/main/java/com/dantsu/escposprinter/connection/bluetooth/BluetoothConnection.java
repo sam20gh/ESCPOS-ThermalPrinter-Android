@@ -99,7 +99,7 @@ public class BluetoothConnection extends DeviceConnection {
             this.disconnect();
             throw new EscPosConnectionException("Unable to connect to bluetooth device.");
         }
-        catch (NoSuchMethodException e) {
+        /*catch (NoSuchMethodException e) {
             Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device NoSuchMethodException.");
             e.printStackTrace();
             this.disconnect();
@@ -116,7 +116,7 @@ public class BluetoothConnection extends DeviceConnection {
             e.printStackTrace();
             this.disconnect();
             throw new EscPosConnectionException(e.getMessage());
-        }
+        }*/
         return this;
     }
 
