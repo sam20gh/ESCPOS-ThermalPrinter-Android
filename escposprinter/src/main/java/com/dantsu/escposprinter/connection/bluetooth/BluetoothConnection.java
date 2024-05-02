@@ -10,6 +10,9 @@ import java.lang.reflect.Method;
 import com.dantsu.escposprinter.connection.DeviceConnection;
 import com.dantsu.escposprinter.exceptions.EscPosConnectionException;
 
+import java.lang.NoSuchMethodException;
+import java.lang.IllegalAccessException;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.UUID;
@@ -98,13 +101,13 @@ public class BluetoothConnection extends DeviceConnection {
             Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device NoSuchMethodException.");
             e.printStackTrace();
             this.disconnect();
-            throw new NoSuchMethodException(e.getMessage());
+            throw new EscPosConnectionException(e.getMessage());
         }
         catch (IllegalAccessException e) {
             Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device IllegalAccessException.");
             e.printStackTrace();
             this.disconnect();
-            throw new IllegalAccessException(e.getMessage());
+            throw new EscPosConnectionException(e.getMessage());
         }
         return this;
     }
