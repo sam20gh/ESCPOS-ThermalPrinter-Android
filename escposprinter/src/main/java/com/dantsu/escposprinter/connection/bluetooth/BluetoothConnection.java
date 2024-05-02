@@ -97,12 +97,12 @@ public class BluetoothConnection extends DeviceConnection {
             Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device.");
             e.printStackTrace();
             this.disconnect();
-            throw new EscPosConnectionException("Unable to connect to bluetooth device.");
+            throw new EscPosConnectionException("Unable to connect to bluetooth device. "+e.getMessage());
         } catch (Exception e) {
             Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device Exception.");
             e.printStackTrace();
             this.disconnect();
-            throw new EscPosConnectionException("Unable to connect to bluetooth device.");
+            throw new EscPosConnectionException("Unable to connect to bluetooth device."+e.getMessage());
         }
         /*catch (NoSuchMethodException e) {
             Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device NoSuchMethodException.");
@@ -130,13 +130,17 @@ public class BluetoothConnection extends DeviceConnection {
      * Get bluetooth device UUID
      */
     protected UUID getDeviceUUID() {
+        Log.d("LOGGRUBPRINTER","GET UIIID 1");
         ParcelUuid[] uuids = device.getUuids();
         if (uuids != null && uuids.length > 0) {
-            if (Arrays.asList(uuids).contains(new ParcelUuid(BluetoothConnection.SPP_UUID))) {
+            Log.d("LOGGRUBPRINTER","GET UIIID 2");
+            if (false && Arrays.asList(uuids).contains(new ParcelUuid(BluetoothConnection.SPP_UUID))) {
                 return BluetoothConnection.SPP_UUID;
             }
+            Log.d("LOGGRUBPRINTER","GET UIIID 3 "+uuids[0].getUuid().toString());
             return uuids[0].getUuid();
         } else {
+            Log.d("LOGGRUBPRINTER","GET UIIID 4");
             return BluetoothConnection.SPP_UUID;
         }
     }
