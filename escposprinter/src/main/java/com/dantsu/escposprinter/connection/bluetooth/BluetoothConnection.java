@@ -130,8 +130,34 @@ public class BluetoothConnection extends DeviceConnection {
      * Get bluetooth device UUID
      */
     protected UUID getDeviceUUID() {
+
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothLeScanner scanner = bluetoothAdapter.getBluetoothLeScanner();
+        
+        Log.d("LOGGRUBPRINTER","SCANNNNNNN UIIID 1");
+        scanner.startScan(new ScanCallback() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onScanResult(int callbackType, android.bluetooth.le.ScanResult result) 
+            {
+                Log.d("LOGGRUBPRINTER","DETECT UIIIDSSSSSSSS");
+                Log.d("LOGGRUBPRINTER","DETECT UIIIDSSSSSSSS"+result.toString());
+                ParcelUuid[] uuids = result.getScanRecord().getServiceUuids();
+                if (uuids != null && uuids.length > 0) {
+                    for (int i=0; i<uuids.length; i++) {
+                    Log.d("LOGGRUBPRINTER","GET UIIID SCAN"+uuids[i].getUuid().toString());
+                    }
+                }
+            }
+        });
+
+
+
+
+
+
         Log.d("LOGGRUBPRINTER","GET UIIID 1");
-        ParcelUuid[] uuids = device.getUuids();
+        ParcelUuid[] uuids = this.device.getUuids();
         if (uuids != null && uuids.length > 0) {
             Log.d("LOGGRUBPRINTER","GET UIIID 2");
             if (false && Arrays.asList(uuids).contains(new ParcelUuid(BluetoothConnection.SPP_UUID))) {
