@@ -98,6 +98,11 @@ public class BluetoothConnection extends DeviceConnection {
             e.printStackTrace();
             this.disconnect();
             throw new EscPosConnectionException("Unable to connect to bluetooth device.");
+        } catch (Exception e) {
+            Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device Exception.");
+            e.printStackTrace();
+            this.disconnect();
+            throw new EscPosConnectionException("Unable to connect to bluetooth device.");
         }
         /*catch (NoSuchMethodException e) {
             Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device NoSuchMethodException.");
@@ -117,6 +122,7 @@ public class BluetoothConnection extends DeviceConnection {
             this.disconnect();
             throw new EscPosConnectionException(e.getMessage());
         }*/
+        Log.d("LOGGRUBPRINTER","end connect method.");
         return this;
     }
 
