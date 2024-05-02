@@ -79,8 +79,9 @@ public class BluetoothConnection extends DeviceConnection {
         Log.d("LOGGRUBPRINTER", uuid.toString());
         try {
             //this.socket = this.device.createRfcommSocketToServiceRecord(uuid);
-            Method m = this.device.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
-            this.socket = (BluetoothSocket) m.invoke(this.device, 1);
+             this.socket = this.device.createInsecureRfcommSocketToServiceRecord(uuid);
+            //Method m = this.device.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
+            // this.socket = (BluetoothSocket) m.invoke(this.device, 1);
 
 
 
