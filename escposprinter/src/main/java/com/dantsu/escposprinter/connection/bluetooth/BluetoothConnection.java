@@ -5,15 +5,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.ParcelUuid;
-import java.lang.reflect.Method;
-import android.bluetooth.le;
 
 import com.dantsu.escposprinter.connection.DeviceConnection;
 import com.dantsu.escposprinter.exceptions.EscPosConnectionException;
-
-import java.lang.NoSuchMethodException;
-import java.lang.IllegalAccessException;
-import java.lang.reflect.InvocationTargetException;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -61,12 +55,10 @@ public class BluetoothConnection extends DeviceConnection {
      */
     @SuppressLint("MissingPermission")
     public BluetoothConnection connect() throws EscPosConnectionException {
-        Log.d("LOGGRUBPRINTER",  "START CONNECT TO BLUE CONNECTION");
+
         if (this.isConnected()) {
-            Log.d("LOGGRUBPRINTER",  "IS CONNECTED");
             return this;
         }
-        Log.d("LOGGRUBPRINTER",  "IS CONNECTED");
 
         if (this.device == null) {
             throw new EscPosConnectionException("Bluetooth device is not connected.");
@@ -76,54 +68,17 @@ public class BluetoothConnection extends DeviceConnection {
 
         UUID uuid = this.getDeviceUUID();
 
-        Log.d("LOGGRUBPRINTER", "UUID IS:" );
-        Log.d("LOGGRUBPRINTER", uuid.toString());
         try {
-            //this.socket = this.device.createRfcommSocketToServiceRecord(uuid);
-             this.socket = this.device.createInsecureRfcommSocketToServiceRecord(uuid);
-            //Method m = this.device.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
-            // this.socket = (BluetoothSocket) m.invoke(this.device, 1);
-
-
-
-            Log.d("LOGGRUBPRINTER","AFTER CREATE SOCKET");
+            this.socket = this.device.createRfcommSocketToServiceRecord(uuid);
             bluetoothAdapter.cancelDiscovery();
-            Log.d("LOGGRUBPRINTER","AFTER cancelDiscovery");
             this.socket.connect();
-            Log.d("LOGGRUBPRINTER","AFTER connect");
             this.outputStream = this.socket.getOutputStream();
-            Log.d("LOGGRUBPRINTER","AFTER outputStream");
             this.data = new byte[0];
         } catch (IOException e) {
-            Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device.");
             e.printStackTrace();
             this.disconnect();
-            throw new EscPosConnectionException("Unable to connect to bluetooth device. "+e.getMessage());
-        } catch (Exception e) {
-            Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device Exception.");
-            e.printStackTrace();
-            this.disconnect();
-            throw new EscPosConnectionException("Unable to connect to bluetooth device."+e.getMessage());
+            throw new EscPosConnectionException("Unable to connect to bluetooth device.");
         }
-        /*catch (NoSuchMethodException e) {
-            Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device NoSuchMethodException.");
-            e.printStackTrace();
-            this.disconnect();
-            throw new EscPosConnectionException(e.getMessage());
-        }
-        catch (IllegalAccessException e) {
-            Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device IllegalAccessException.");
-            e.printStackTrace();
-            this.disconnect();
-            throw new EscPosConnectionException(e.getMessage());
-        }
-        catch (InvocationTargetException e) {
-            Log.d("LOGGRUBPRINTER","Unable to connect to bluetooth device InvocationTargetException.");
-            e.printStackTrace();
-            this.disconnect();
-            throw new EscPosConnectionException(e.getMessage());
-        }*/
-        Log.d("LOGGRUBPRINTER","end connect method.");
         return this;
     }
 
@@ -131,43 +86,13 @@ public class BluetoothConnection extends DeviceConnection {
      * Get bluetooth device UUID
      */
     protected UUID getDeviceUUID() {
-
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        BluetoothLeScanner scanner = bluetoothAdapter.getBluetoothLeScanner();
-        
-        Log.d("LOGGRUBPRINTER","SCANNNNNNN UIIID 1");
-        scanner.startScan(new ScanCallback() {
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onScanResult(int callbackType, android.bluetooth.le.ScanResult result) 
-            {
-                Log.d("LOGGRUBPRINTER","DETECT UIIIDSSSSSSSS");
-                Log.d("LOGGRUBPRINTER","DETECT UIIIDSSSSSSSS"+result.toString());
-                ParcelUuid[] uuids = result.getScanRecord().getServiceUuids();
-                if (uuids != null && uuids.length > 0) {
-                    for (int i=0; i<uuids.length; i++) {
-                    Log.d("LOGGRUBPRINTER","GET UIIID SCAN"+uuids[i].getUuid().toString());
-                    }
-                }
-            }
-        });
-
-
-
-
-
-
-        Log.d("LOGGRUBPRINTER","GET UIIID 1");
-        ParcelUuid[] uuids = this.device.getUuids();
+        ParcelUuid[] uuids = device.getUuids();
         if (uuids != null && uuids.length > 0) {
-            Log.d("LOGGRUBPRINTER","GET UIIID 2");
-            if (false && Arrays.asList(uuids).contains(new ParcelUuid(BluetoothConnection.SPP_UUID))) {
+            if (Arrays.asList(uuids).contains(new ParcelUuid(BluetoothConnection.SPP_UUID))) {
                 return BluetoothConnection.SPP_UUID;
             }
-            Log.d("LOGGRUBPRINTER","GET UIIID 3 "+uuids[0].getUuid().toString());
             return uuids[0].getUuid();
         } else {
-            Log.d("LOGGRUBPRINTER","GET UIIID 4");
             return BluetoothConnection.SPP_UUID;
         }
     }
