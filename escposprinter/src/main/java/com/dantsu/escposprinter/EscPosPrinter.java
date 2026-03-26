@@ -254,4 +254,15 @@ public class EscPosPrinter extends EscPosPrinterSize {
         this.printer.printCharsetEncodingCharacters(charsetId);
         return this;
     }
+
+    /**
+     * Print all characters of a charset encoding
+     *
+     * @param charsetId Charset id to print.
+     * @return Fluent interface
+     */
+    public EscPosPrinter printImage(byte[] image) {
+        this.printer.printImage(image);
+        return this;
+    }
 }
