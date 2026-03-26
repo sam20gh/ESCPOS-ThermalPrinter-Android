@@ -261,7 +261,7 @@ public class EscPosPrinter extends EscPosPrinterSize {
      * @param charsetId Charset id to print.
      * @return Fluent interface
      */
-    public EscPosPrinter printImage(byte[] image) {
+    public EscPosPrinter printImage(byte[] image) throws EscPosConnectionException {
         this.printer.printImage(image);
         return this;
     }
