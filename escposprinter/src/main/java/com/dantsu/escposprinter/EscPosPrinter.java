@@ -12,6 +12,7 @@ import com.dantsu.escposprinter.textparser.PrinterTextParserColumn;
 import com.dantsu.escposprinter.textparser.IPrinterTextParserElement;
 import com.dantsu.escposprinter.textparser.PrinterTextParserLine;
 import com.dantsu.escposprinter.textparser.PrinterTextParserString;
+import android.graphics.Bitmap;
 
 public class EscPosPrinter extends EscPosPrinterSize {
 
