@@ -175,10 +175,13 @@ public class EscPosPrinterCommands {
             nL = dotsByLine % 256,
             imageHeight = yH * 256 + yL,
             imageLineHeightCount = (int) Math.ceil((double) imageHeight / 24.0),
-            imageBytesSize = 6 + bytesByLine * 24;
+            imageBytesSize = 5 + bytesByLine * 24;
 
         byte[][] returnedBytes = new byte[imageLineHeightCount + 2][];
-        returnedBytes[0] = EscPosPrinterCommands.LINE_SPACING_24;
+
+        // ✅ مهم: line spacing = 0
+        returnedBytes[0] = new byte[]{0x1B, 0x33, 0x00}; // ESC 3 0
+        //returnedBytes[0] = EscPosPrinterCommands.LINE_SPACING_24;
         for (int i = 0; i < imageLineHeightCount; ++i) {
             int pxBaseRow = i * 24;
             byte[] imageBytes = new byte[imageBytesSize];
@@ -207,10 +210,17 @@ public class EscPosPrinterCommands {
                     }
                 }
             }
-            //imageBytes[imageBytes.length - 1] = EscPosPrinterCommands.LF;
-            returnedBytes[i + 1] = imageBytes;
+
+            // ✅ فقط یک LF کنترل‌شده
+            byte[] lineWithLF = new byte[imageBytes.length + 1];
+            System.arraycopy(imageBytes, 0, lineWithLF, 0, imageBytes.length);
+            lineWithLF[lineWithLF.length - 1] = 0x0A; // LF
+
+            returnedBytes[i + 1] = lineWithLF;
         }
-        returnedBytes[returnedBytes.length - 1] = EscPosPrinterCommands.LINE_SPACING_30;
+
+        // ✅ بازگرداندن spacing به حالت پیش‌فرض
+        returnedBytes[returnedBytes.length - 1] = new byte[]{0x1B, 0x32}; // ESC 2
         return returnedBytes;
     }
 
