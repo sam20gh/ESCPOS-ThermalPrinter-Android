@@ -207,7 +207,7 @@ public class EscPosPrinterCommands {
                     }
                 }
             }
-            imageBytes[imageBytes.length - 1] = EscPosPrinterCommands.LF;
+            //imageBytes[imageBytes.length - 1] = EscPosPrinterCommands.LF;
             returnedBytes[i + 1] = imageBytes;
         }
         returnedBytes[returnedBytes.length - 1] = EscPosPrinterCommands.LINE_SPACING_30;
