@@ -599,7 +599,7 @@ public class EscPosPrinterCommands {
             
         }
         if(!sendPartibale) {
-            connection.write(new byte[]{0x0A});
+            this.printerConnection.write(new byte[]{0x0A});
             this.printerConnection.send();
         }
 
