@@ -266,6 +266,7 @@ public class EscPosPrinter extends EscPosPrinterSize {
         this.printer.reset();
         byte[] bytes = EscPosPrinterCommands.bitmapToBytes(bitmap, true);
         this.useEscAsteriskCommand(useEscAsteriskCmd);
+        this.printer.resetLineSpace();
         this.printer.printImage(bytes,sendPartibale);
         try {
             Thread.sleep(250);
@@ -273,6 +274,7 @@ public class EscPosPrinter extends EscPosPrinterSize {
             e.printStackTrace();
         }
         this.printer.cutPaper();
+        this.printer.restoreLineSpace();
         return this;
     }
 }
