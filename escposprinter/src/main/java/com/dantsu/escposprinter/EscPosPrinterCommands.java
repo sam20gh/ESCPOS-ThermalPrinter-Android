@@ -244,7 +244,8 @@ public class EscPosPrinterCommands {
             nH = dotsByLine / 256,
             nL = dotsByLine % 256,
             imageHeight = yH * 256 + yL,
-            imageLineHeightCount = (int) Math.ceil((double) imageHeight / 24.0),
+            //imageLineHeightCount = (int) Math.ceil((double) imageHeight / 24.0),
+            imageLineHeightCount = (imageHeight + 23) / 24,
             imageBytesSize = 6 + bytesByLine * 24;
 
         byte[][] returnedBytes = new byte[imageLineHeightCount + 2][];
@@ -264,11 +265,12 @@ public class EscPosPrinterCommands {
                     pxColumn = imgByte / 3,
                     bitColumn = 1 << (7 - pxColumn % 8),
                     pxRow = pxBaseRow + byteRow * 8;
+                if (pxRow >= imageHeight) continue;
                 for (int k = 0; k < 8; ++k) {
                     int indexBytes = bytesByLine * (pxRow + k) + pxColumn / 8 + 8;
 
                     if (indexBytes >= bytes.length) {
-                        break;
+                        continue;
                     }
 
                     boolean isBlack = (bytes[indexBytes] & bitColumn) == bitColumn;
