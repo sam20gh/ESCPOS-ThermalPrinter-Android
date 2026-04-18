@@ -162,8 +162,78 @@ public class EscPosPrinterCommands {
 
         return imageBytes;
     }
-
     public static byte[][] convertGSv0ToEscAsterisk(byte[] bytes) {
+
+        int xL = bytes[4] & 0xFF;
+        int xH = bytes[5] & 0xFF;
+        int yL = bytes[6] & 0xFF;
+        int yH = bytes[7] & 0xFF;
+
+        int bytesByLine = xH * 256 + xL;
+        int dotsByLine = bytesByLine * 8;
+
+        int nL = dotsByLine % 256;
+        int nH = dotsByLine / 256;
+
+        int imageHeight = yH * 256 + yL;
+
+        // 👇 تعداد chunk ها (هر chunk = 24px)
+        int imageLineHeightCount = (int) Math.ceil(imageHeight / 24.0);
+
+        // 👇 آرایه خروجی
+        byte[][] result = new byte[imageLineHeightCount + 2][];
+
+        // 👇 تنظیم line spacing روی 24
+        result[0] = new byte[]{0x1B, 0x33, 24};
+
+        for (int i = 0; i < imageLineHeightCount; i++) {
+
+            int pxBaseRow = i * 24;
+
+            byte[] imageBytes = new byte[5 + bytesByLine * 3];
+
+            // ESC * 33
+            imageBytes[0] = 0x1B;
+            imageBytes[1] = 0x2A;
+            imageBytes[2] = 33;
+            imageBytes[3] = (byte) nL;
+            imageBytes[4] = (byte) nH;
+
+            int index = 5;
+
+            for (int x = 0; x < dotsByLine; x++) {
+
+                for (int k = 0; k < 3; k++) {
+
+                    int slice = 0;
+
+                    for (int b = 0; b < 8; b++) {
+
+                        int y = pxBaseRow + k * 8 + b;
+
+                        if (y >= imageHeight) continue;
+
+                        int byteIndex = 8 + y * bytesByLine + (x / 8);
+                        int bit = 7 - (x % 8);
+
+                        if ((bytes[byteIndex] & (1 << bit)) != 0) {
+                            slice |= (1 << (7 - b));
+                        }
+                    }
+
+                    imageBytes[index++] = (byte) slice;
+                }
+            }
+
+            result[i + 1] = imageBytes;
+        }
+
+        // 👇 reset line spacing (خیلی مهم)
+        result[result.length - 1] = new byte[]{0x1B, 0x32};
+
+        return result;
+    }
+    public static byte[][] convertGSv0ToEscAsterisk2(byte[] bytes) {
         int
             xL = bytes[4] & 0xFF,
             xH = bytes[5] & 0xFF,
