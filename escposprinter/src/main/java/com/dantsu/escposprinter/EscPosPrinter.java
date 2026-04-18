@@ -267,6 +267,7 @@ public class EscPosPrinter extends EscPosPrinterSize {
         byte[] bytes = EscPosPrinterCommands.bitmapToBytes(bitmap, true);
         this.useEscAsteriskCommand(useEscAsteriskCmd);
         this.printer.printImage(bytes,sendPartibale);
+        Thread.sleep(150);
         this.printer.cutPaper();
         return this;
     }
