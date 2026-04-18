@@ -582,7 +582,11 @@ public class EscPosPrinterCommands {
      * @param image Bytes contain the image in ESC/POS command
      * @return Fluent interface
      */
+
     public EscPosPrinterCommands printImage(byte[] image) throws EscPosConnectionException {
+        return printImage(image,true);
+    }
+    public EscPosPrinterCommands printImage(byte[] image,boolean sendPartibale) throws EscPosConnectionException {
         if (!this.printerConnection.isConnected()) {
             return this;
         }
@@ -591,8 +595,10 @@ public class EscPosPrinterCommands {
 
         for (byte[] bytes : bytesToPrint) {
             this.printerConnection.write(bytes);
+            if(sendPartibale) this.printerConnection.send();
+            
         }
-        this.printerConnection.send();
+        if(!sendPartibale) this.printerConnection.send();
 
         return this;
     }

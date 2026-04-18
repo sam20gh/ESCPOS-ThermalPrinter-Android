@@ -262,11 +262,11 @@ public class EscPosPrinter extends EscPosPrinterSize {
      * @param charsetId Charset id to print.
      * @return Fluent interface
      */
-    public EscPosPrinter printImage(Bitmap bitmap,boolean useEscAsteriskCmd) throws EscPosConnectionException {
+    public EscPosPrinter printImage(Bitmap bitmap,boolean useEscAsteriskCmd,boolean sendPartibale) throws EscPosConnectionException {
         this.printer.reset();
         byte[] bytes = EscPosPrinterCommands.bitmapToBytes(bitmap, true);
         this.useEscAsteriskCommand(useEscAsteriskCmd);
-        this.printer.printImage(bytes);
+        this.printer.printImage(bytes,sendPartibale);
         this.printer.cutPaper();
         return this;
     }
