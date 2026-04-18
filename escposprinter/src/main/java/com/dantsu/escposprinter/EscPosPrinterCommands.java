@@ -768,7 +768,7 @@ public class EscPosPrinterCommands {
         return this.charsetEncoding;
     }
 
-    public EscPosPrinterCommands resetLineSpace() {
+    public EscPosPrinterCommands resetLineSpace()  throws EscPosConnectionException{
         if (!this.printerConnection.isConnected()) {
             return this;
         }
@@ -776,7 +776,7 @@ public class EscPosPrinterCommands {
         this.printerConnection.send();
         return this;
     }
-    public EscPosPrinterCommands restoreLineSpace() {
+    public EscPosPrinterCommands restoreLineSpace() throws EscPosConnectionException {
         if (!this.printerConnection.isConnected()) {
             return this;
         }
