@@ -264,9 +264,8 @@ public class EscPosPrinter extends EscPosPrinterSize {
      */
     public EscPosPrinter printImage(Bitmap bitmap,boolean useEscAsteriskCmd,boolean sendPartibale) throws EscPosConnectionException {
         this.printer.reset();
-        byte[] bytes = EscPosPrinterCommands.bitmapToBytes(bitmap, true);
+        byte[] bytes = EscPosPrinterCommands.bitmapToBytes(bitmap, false);
         this.useEscAsteriskCommand(useEscAsteriskCmd);
-        this.printer.resetLineSpace();
         this.printer.printImage(bytes,sendPartibale);
         try {
             Thread.sleep(250);
@@ -274,7 +273,6 @@ public class EscPosPrinter extends EscPosPrinterSize {
             e.printStackTrace();
         }
         this.printer.cutPaper();
-        this.printer.restoreLineSpace();
         return this;
     }
 }

@@ -768,20 +768,4 @@ public class EscPosPrinterCommands {
         return this.charsetEncoding;
     }
 
-    public EscPosPrinterCommands resetLineSpace()  throws EscPosConnectionException{
-        if (!this.printerConnection.isConnected()) {
-            return this;
-        }
-        this.printerConnection.write(new byte[]{0x1B, 0x33, 0x00});
-        this.printerConnection.send();
-        return this;
-    }
-    public EscPosPrinterCommands restoreLineSpace() throws EscPosConnectionException {
-        if (!this.printerConnection.isConnected()) {
-            return this;
-        }
-        this.printerConnection.write(new byte[]{0x1B, 0x32});
-        this.printerConnection.send();
-        return this;
-    }
 }
