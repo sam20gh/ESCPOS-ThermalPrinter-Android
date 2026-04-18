@@ -162,8 +162,10 @@ public class EscPosPrinterCommands {
 
         return imageBytes;
     }
-
     public static byte[][] convertGSv0ToEscAsterisk(byte[] bytes) {
+        return this.convertGSv0ToEscAsterisk(bytes,false);
+    }
+    public static byte[][] convertGSv0ToEscAsterisk(byte[] bytes, boolean zeroLineSpace) {
         int
             xL = bytes[4] & 0xFF,
             xH = bytes[5] & 0xFF,
@@ -175,10 +177,16 @@ public class EscPosPrinterCommands {
             nL = dotsByLine % 256,
             imageHeight = yH * 256 + yL,
             imageLineHeightCount = (int) Math.ceil((double) imageHeight / 24.0),
-            imageBytesSize = 6 + bytesByLine * 24;
+            imageBytesSize = 5 + bytesByLine * 24; 
 
-        byte[][] returnedBytes = new byte[imageLineHeightCount + 2][];
-        returnedBytes[0] = EscPosPrinterCommands.LINE_SPACING_24;
+        byte[][] returnedBytes;
+        if (zeroLineSpace) {
+            returnedBytes = new byte[imageLineHeightCount + 1][];
+            returnedBytes[0] = new byte[]{0x1B, 0x33, 0x00}; // ESC 3 0
+        } else {
+            returnedBytes = new byte[imageLineHeightCount + 2][];
+            returnedBytes[0] = EscPosPrinterCommands.LINE_SPACING_24;
+        }
         for (int i = 0; i < imageLineHeightCount; ++i) {
             int pxBaseRow = i * 24;
             byte[] imageBytes = new byte[imageBytesSize];
@@ -194,23 +202,25 @@ public class EscPosPrinterCommands {
                     pxColumn = imgByte / 3,
                     bitColumn = 1 << (7 - pxColumn % 8),
                     pxRow = pxBaseRow + byteRow * 8;
+
                 for (int k = 0; k < 8; ++k) {
                     int indexBytes = bytesByLine * (pxRow + k) + pxColumn / 8 + 8;
-
-                    if (indexBytes >= bytes.length) {
-                        break;
-                    }
-
+                    if (indexBytes >= bytes.length) break;
                     boolean isBlack = (bytes[indexBytes] & bitColumn) == bitColumn;
                     if (isBlack) {
-                        imageBytes[j] |= 1 << 7 - k;
+                        imageBytes[j] |= 1 << (7 - k);
                     }
                 }
             }
-            imageBytes[imageBytes.length - 1] = EscPosPrinterCommands.LF;
-            returnedBytes[i + 1] = imageBytes;
+            if (!zeroLineSpace) {
+                imageBytes = java.util.Arrays.copyOf(imageBytes, imageBytes.length + 1);
+                imageBytes[imageBytes.length - 1] = EscPosPrinterCommands.LF;
+            }
+            returnedBytes[ i + 1] = imageBytes;
         }
-        returnedBytes[returnedBytes.length - 1] = EscPosPrinterCommands.LINE_SPACING_30;
+        if (!zeroLineSpace) {
+            returnedBytes[returnedBytes.length - 1] = EscPosPrinterCommands.LINE_SPACING_30;
+        }
         return returnedBytes;
     }
 
@@ -584,14 +594,14 @@ public class EscPosPrinterCommands {
      */
 
     public EscPosPrinterCommands printImage(byte[] image) throws EscPosConnectionException {
-        return printImage(image,true);
+        return printImage(image,true,false);
     }
-    public EscPosPrinterCommands printImage(byte[] image,boolean sendPartibale) throws EscPosConnectionException {
+    public EscPosPrinterCommands printImage(byte[] image,boolean sendPartibale,boolean zeroLineSpace) throws EscPosConnectionException {
         if (!this.printerConnection.isConnected()) {
             return this;
         }
 
-        byte[][] bytesToPrint = this.useEscAsteriskCommand ? EscPosPrinterCommands.convertGSv0ToEscAsterisk(image) : new byte[][]{image};
+        byte[][] bytesToPrint = this.useEscAsteriskCommand ? EscPosPrinterCommands.convertGSv0ToEscAsterisk(image,zeroLineSpace) : new byte[][]{image};
 
         for (byte[] bytes : bytesToPrint) {
             this.printerConnection.write(bytes);
@@ -768,4 +778,21 @@ public class EscPosPrinterCommands {
         return this.charsetEncoding;
     }
 
+    public EscPosPrinterCommands resetLineSpace()  throws EscPosConnectionException{
+        if (!this.printerConnection.isConnected()) {
+            return this;
+        }
+        this.printerConnection.write(new byte[]{0x1B, 0x32});
+        this.printerConnection.write(new byte[]{0x1B, 0x33, 0x00});
+        this.printerConnection.send();
+        return this;
+    }
+    public EscPosPrinterCommands restoreLineSpace() throws EscPosConnectionException {
+        if (!this.printerConnection.isConnected()) {
+            return this;
+        }
+        this.printerConnection.write(new byte[]{0x1B, 0x32});
+        this.printerConnection.send();
+        return this;
+    }
 }
