@@ -163,7 +163,7 @@ public class EscPosPrinterCommands {
         return imageBytes;
     }
     public static byte[][] convertGSv0ToEscAsterisk(byte[] bytes) {
-        return this.convertGSv0ToEscAsterisk(bytes,false);
+        return EscPosPrinterCommands.convertGSv0ToEscAsterisk(bytes,false);
     }
     public static byte[][] convertGSv0ToEscAsterisk(byte[] bytes, boolean zeroLineSpace) {
         int
