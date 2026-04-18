@@ -595,7 +595,7 @@ public class EscPosPrinterCommands {
      */
 
     public EscPosPrinterCommands printImage(byte[] image) throws EscPosConnectionException {
-        return printImage(image,true);
+        return this.printImage(image,true,false);
     }
     public EscPosPrinterCommands printImage(byte[] image,boolean sendPartibale,boolean zeroLineSpace) throws EscPosConnectionException {
         if (!this.printerConnection.isConnected()) {
