@@ -162,6 +162,7 @@ public class EscPosPrinterCommands {
 
         return imageBytes;
     }
+
     public static byte[][] convertGSv0ToEscAsterisk(byte[] bytes) {
         return EscPosPrinterCommands.convertGSv0ToEscAsterisk(bytes,false);
     }
@@ -177,7 +178,7 @@ public class EscPosPrinterCommands {
             nL = dotsByLine % 256,
             imageHeight = yH * 256 + yL,
             imageLineHeightCount = (int) Math.ceil((double) imageHeight / 24.0),
-            imageBytesSize = 5 + bytesByLine * 24; 
+            imageBytesSize = 6 + bytesByLine * 24; 
 
         byte[][] returnedBytes;
         if (zeroLineSpace) {
@@ -216,7 +217,7 @@ public class EscPosPrinterCommands {
                 imageBytes = java.util.Arrays.copyOf(imageBytes, imageBytes.length + 1);
                 imageBytes[imageBytes.length - 1] = EscPosPrinterCommands.LF;
             }
-            returnedBytes[ i + 1] = imageBytes;
+            returnedBytes[ i ] = imageBytes;
         }
         if (!zeroLineSpace) {
             returnedBytes[returnedBytes.length - 1] = EscPosPrinterCommands.LINE_SPACING_30;
@@ -594,7 +595,7 @@ public class EscPosPrinterCommands {
      */
 
     public EscPosPrinterCommands printImage(byte[] image) throws EscPosConnectionException {
-        return printImage(image,true,false);
+        return printImage(image,true);
     }
     public EscPosPrinterCommands printImage(byte[] image,boolean sendPartibale,boolean zeroLineSpace) throws EscPosConnectionException {
         if (!this.printerConnection.isConnected()) {
