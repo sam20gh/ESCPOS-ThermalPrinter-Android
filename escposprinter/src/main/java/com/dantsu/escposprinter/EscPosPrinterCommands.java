@@ -178,7 +178,7 @@ public class EscPosPrinterCommands {
             nL = dotsByLine % 256,
             imageHeight = yH * 256 + yL,
             imageLineHeightCount = (int) Math.ceil((double) imageHeight / 24.0),
-            imageBytesSize = 5 + bytesByLine * 24; 
+            imageBytesSize = 6 + bytesByLine * 24; 
 
         byte[][] returnedBytes;
         if (zeroLineSpace) {
