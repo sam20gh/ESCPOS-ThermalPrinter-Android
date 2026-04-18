@@ -178,7 +178,7 @@ public class EscPosPrinterCommands {
             nL = dotsByLine % 256,
             imageHeight = yH * 256 + yL,
             imageLineHeightCount = (int) Math.ceil((double) imageHeight / 24.0),
-            imageBytesSize = 6 + bytesByLine * 24; 
+            imageBytesSize = 5 + bytesByLine * 24; 
 
         byte[][] returnedBytes;
         if (zeroLineSpace) {
@@ -193,7 +193,7 @@ public class EscPosPrinterCommands {
             byte[] imageBytes = new byte[imageBytesSize];
             imageBytes[0] = 0x1B;
             imageBytes[1] = 0x2A;
-            imageBytes[2] = 0x21;
+            imageBytes[2] = 0x00;
             imageBytes[3] = (byte) nL;
             imageBytes[4] = (byte) nH;
             for (int j = 5; j < imageBytes.length; ++j) {
@@ -217,7 +217,7 @@ public class EscPosPrinterCommands {
                 imageBytes = java.util.Arrays.copyOf(imageBytes, imageBytes.length + 1);
                 imageBytes[imageBytes.length - 1] = EscPosPrinterCommands.LF;
             }
-            returnedBytes[ i ] = imageBytes;
+            returnedBytes[ i + 1] = imageBytes;
         }
         if (!zeroLineSpace) {
             returnedBytes[returnedBytes.length - 1] = EscPosPrinterCommands.LINE_SPACING_30;
