@@ -613,7 +613,7 @@ public class EscPosPrinterCommands {
             this.printerConnection.write(new byte[]{0x0A});
             this.printerConnection.send();
         }
-        connection.write(new byte[]{0x0A});
+        this.printerConnection.write(new byte[]{0x0A});
 
         this.feedPaper(100);
         try {
