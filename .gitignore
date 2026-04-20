@@ -21,3 +21,4 @@
 .gradle/vcs-1/gc.properties
 .DS_Store
 local.properties
+.gradle
