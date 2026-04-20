@@ -613,13 +613,14 @@ public class EscPosPrinterCommands {
             this.printerConnection.write(new byte[]{0x0A});
             this.printerConnection.send();
         }
+        connection.write(new byte[]{0x0A});
+
+        this.feedPaper(100);
         try {
-            Thread.sleep(250);
+            Thread.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        this.printerConnection.write(new byte[]{0x1D, 0x56, 0x01});
-        this.printerConnection.send();
         return this;
     }
 
