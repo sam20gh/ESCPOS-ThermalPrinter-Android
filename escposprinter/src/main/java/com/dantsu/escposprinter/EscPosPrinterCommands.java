@@ -595,9 +595,9 @@ public class EscPosPrinterCommands {
      */
 
     public EscPosPrinterCommands printImage(byte[] image) throws EscPosConnectionException {
-        return this.printImage(image,true,false);
+        return this.printImage(image,true,false,false);
     }
-    public EscPosPrinterCommands printImage(byte[] image,boolean sendPartibale,boolean zeroLineSpace) throws EscPosConnectionException {
+    public EscPosPrinterCommands printImage(byte[] image,boolean sendPartibale,boolean zeroLineSpace,boolean withCut) throws EscPosConnectionException {
         if (!this.printerConnection.isConnected()) {
             return this;
         }
@@ -608,11 +608,10 @@ public class EscPosPrinterCommands {
         byte[] feed = new byte[]{0x0A};
         for (int i = 0; i < bytesToPrint.length; i++) {
             byte[] chunk = bytesToPrint[i];
-            if (i == bytesToPrint.length - 1) {
+            if (i == bytesToPrint.length - 1 && withCut) {
                 byte[] finalChunk = new byte[chunk.length + feed.length + cutCommand.length];
                 System.arraycopy(chunk, 0, finalChunk, 0, chunk.length);
                 System.arraycopy(cutCommand, 0, finalChunk, chunk.length, cutCommand.length);
-
                 this.printerConnection.write(finalChunk);
             } else {
                 this.printerConnection.write(chunk);
@@ -620,24 +619,8 @@ public class EscPosPrinterCommands {
             if(sendPartibale) this.printerConnection.send();
         }
 
-
-        /*
-        for (byte[] bytes : bytesToPrint) {
-            this.printerConnection.write(bytes);
-            if(sendPartibale) this.printerConnection.send();
-        }*/
-
         if(!sendPartibale) {
-            //this.printerConnection.write(new byte[]{0x0A});
             this.printerConnection.send();
-        }
-        this.printerConnection.write(new byte[]{0x0A});
-
-        this.feedPaper(100);
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
         return this;
     }
