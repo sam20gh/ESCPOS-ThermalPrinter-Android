@@ -618,8 +618,8 @@ public class EscPosPrinterCommands {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        connection.write(new byte[]{0x1D, 0x56, 0x01});
-        connection.send();
+        this.printerConnection.write(new byte[]{0x1D, 0x56, 0x01});
+        this.printerConnection.send();
         return this;
     }
 
