@@ -267,12 +267,14 @@ public class EscPosPrinter extends EscPosPrinterSize {
         byte[] bytes = EscPosPrinterCommands.bitmapToBytes(bitmap, false);
         this.useEscAsteriskCommand(useEscAsteriskCmd);
         //this.printer.resetLineSpace();
-        this.printer.printImage(bytes,sendPartibale,true);
+        this.printer.cutPaper();
         try {
             Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        this.printer.printImage(bytes,sendPartibale,true);
+        
         this.printer.cutPaper();
         //this.printer.restoreLineSpace();
         return this;

@@ -604,13 +604,31 @@ public class EscPosPrinterCommands {
 
         byte[][] bytesToPrint = this.useEscAsteriskCommand ? EscPosPrinterCommands.convertGSv0ToEscAsterisk(image,zeroLineSpace) : new byte[][]{image};
 
+        byte[] cutCommand = new byte[]{0x1D, 0x56, 0x01};
+        byte[] feed = new byte[]{0x0A};
+        for (int i = 0; i < bytesToPrint.length; i++) {
+            byte[] chunk = bytesToPrint[i];
+            if (i == bytesToPrint.length - 1) {
+                byte[] finalChunk = new byte[chunk.length + feed.length + cutCommand.length];
+                System.arraycopy(chunk, 0, finalChunk, 0, chunk.length);
+                System.arraycopy(cutCommand, 0, finalChunk, chunk.length, cutCommand.length);
+
+                this.printerConnection.write(finalChunk);
+            } else {
+                this.printerConnection.write(chunk);
+            }
+            if(sendPartibale) this.printerConnection.send();
+        }
+
+
+        /*
         for (byte[] bytes : bytesToPrint) {
             this.printerConnection.write(bytes);
             if(sendPartibale) this.printerConnection.send();
-            
-        }
+        }*/
+
         if(!sendPartibale) {
-            this.printerConnection.write(new byte[]{0x0A});
+            //this.printerConnection.write(new byte[]{0x0A});
             this.printerConnection.send();
         }
         this.printerConnection.write(new byte[]{0x0A});
